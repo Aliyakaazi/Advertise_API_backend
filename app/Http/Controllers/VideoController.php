@@ -23,6 +23,10 @@ class VideoController extends Controller
 								if($provider->provider_id==1){
                                     $videoupload->provider_id=1;
 									if($request->video->extension()=='mp4'){
+										$getID3 = new getID3;
+										$file = $getID3->analyze($video);
+										   $playtime_seconds = $file['playtime_seconds'];
+
 													$validator = Validator::make($request->all(), [
 												'video' => 'required|video|mimes:mp4',
 												'video_name' => 'required',
@@ -30,30 +34,42 @@ class VideoController extends Controller
 											if ($validator->fails()) {
 												return response()->json(['message'=>$validator,'code'=>'1'],500);
 											}
-												else{$videoupload->video=$request->video;
+											elseif( $playtime_seconds >60){																							
+												return response()->json(['message'=>'Please upload file with duration less than 1 minute','code'=>'1'],500);
+												}else{$videoupload->video=$request->video;
 												$videoupload->video_name=$request->video_name;}
 										}
 										elseif($request->video->extension()=='mp3'){
+											$getID3 = new getID3;
+ $file = $getID3->analyze($video);
+    $playtime_seconds = $file['playtime_seconds'];
 													$validator = Validator::make($request->all(), [
 														'video'=>'required|mime:audio/mp3|max:5000',
 												'video_name' => 'required',
 											]);
 											if ($validator->fails()) {
 												return response()->json(['message'=>$validator,'code'=>'1'],500);
-											}
+											}elseif( $playtime_seconds >30){												
+												return response()->json(['message'=>'Please upload file with duration less than 30 sedonds','code'=>'1'],500);
+												}
 												else{$videoupload->video=$request->video;
 												$videoupload->video_name=$request->video_name;}
 										}
 								} elseif($provider->provider_id==2){
 									$videoupload->provider_id=2;
 										if($request->video->extension()=='mp4'||$request->video->extension()=='mov'){
+											$getID3 = new getID3;
+ $file = $getID3->analyze($video);
+    $playtime_seconds = $file['playtime_seconds'];
 										$validator = Validator::make($request->all(), [
 												'video' => 'required|mimes:mp4,video/quicktime|max:500000',
 												'video_name' => 'required',
 											]);
 											if ($validator->fails()) {
 												return response()->json(['message'=>$validator,'code'=>'1'],500);
-											}
+											}elseif( $playtime_seconds >30){												
+												return response()->json(['message'=>'Please upload file with duration less than 30 sedonds','code'=>'1'],500);
+												}
 												else{$videoupload->video=$request->video;
 												$videoupload->video_name=$request->video_name;}
 													
