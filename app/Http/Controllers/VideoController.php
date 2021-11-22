@@ -23,19 +23,19 @@ class VideoController extends Controller
 								if($provider->provider_id==1){
                                     $videoupload->provider_id=1;
 									if($request->video->extension()=='mp4'){
-												/*	$validator = Validator::make($request->all(), [
+													$validator = Validator::make($request->all(), [
 												'video' => 'required|video|mimes:mp4',
 												'video_name' => 'required',
 											]);
 											if ($validator->fails()) {
 												return response()->json(['message'=>$validator,'code'=>'1'],500);
 											}
-												else{8*/$videoupload->video=$request->video;
-												$videoupload->video_name=$request->video_name;//}
+												else{$videoupload->video=$request->video;
+												$videoupload->video_name=$request->video_name;}
 										}
 										elseif($request->video->extension()=='mp3'){
 													$validator = Validator::make($request->all(), [
-												
+														'video'=>'required|mime:audio/mp3|max:5000',
 												'video_name' => 'required',
 											]);
 											if ($validator->fails()) {
@@ -48,7 +48,7 @@ class VideoController extends Controller
 									$videoupload->provider_id=2;
 										if($request->video->extension()=='mp4'||$request->video->extension()=='mov'){
 										$validator = Validator::make($request->all(), [
-												'video' => 'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+												'video' => 'required|mimes:mp4,video/quicktime|max:500000',
 												'video_name' => 'required',
 											]);
 											if ($validator->fails()) {

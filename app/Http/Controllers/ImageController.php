@@ -32,22 +32,19 @@ class ImageController extends Controller
 											}
 												else{$imageupload->image=$request->image;
 												$imageupload->image_name=$request->image_name;}
-										}elseif($request->image->extension()=='mp4'){
-													$imageupload->image=$request->image;
-													$imageupload->image_name=$request->image_name;
-										}
-										elseif($request->image->extension()=='mp3'){
-													$imageupload->image=$request->image;
-													$imageupload->image_name=$request->image_name;
 										}
 								} elseif($provider->provider_id==2){
 									$imageupload->provider_id=2;
 										if($request->image->extension()=='jpg'||$request->image->extension()=='gif'){
-													$imageupload->image=$request->image;
-													$imageupload->image_name=$request->image_name;
-										}elseif($request->image->extension()=='mp4'||$request->image->extension()=='mov'){
-													$imageupload->image=$request->image;
-													$imageupload->image_name=$request->image_name;
+											$validator = Validator::make($request->all(), [
+												'image' => 'required|image|mimes:jpg,gif|max:5000|dimensions:ratio=16/9',
+												'image_name' => 'required',
+											]);
+											if ($validator->fails()) {
+												return response()->json(['message'=>$validator,'code'=>'1'],500);
+											}
+												else{$imageupload->image=$request->image;
+												$imageupload->image_name=$request->image_name;}
 										}
 
 								}
@@ -61,8 +58,8 @@ class ImageController extends Controller
 		->where('image', $request->image)
 		->get();
 				//$data=array('provider_id'->$provider->provider_id,'name'->$request->image_name,'image_file'->$request->image_name);
-				//return response()->json(['message'=>'Data saved successfully','code'=>'0','provider_id'->$provider->provider_id,'name'->$request->image_name,'image_file'->$request->image_name],200);
-				return response()->json(['message'=>'Data saved successfully','code'=>'0','details'=>$image_upload2],200);
+				//return response()->json(['message'=>'Data saved successfully','code'=>'0','provider_id'->$provider->provider_id,'name'->$request->image_name,'image_file'->$request->image_name],200);\
+				return response()->json(['message'=>'data saved succesfully','code'=>'0','image'=>$image_upload2],200);
 			}else{
 
 					return response()->json(['message'=>'Failed to save image to database','code'=>'1'],500);
